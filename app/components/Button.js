@@ -28,7 +28,7 @@ const useStyles = StyleSheet.create((theme) => ({
     },
 }))
 
-const Button = ({ type = SECONDARY, onPress = () => {} }) => {
+const Button = ({ type = SECONDARY, text = 'SUBMIT', onPress = () => {} }) => {
     const classes = useStyles()
 
     let ContainerStyles = { ...classes.buttonContainer, ...classes.primary }
@@ -42,7 +42,7 @@ const Button = ({ type = SECONDARY, onPress = () => {} }) => {
     return (
         <TouchableHighlight underlayColor={UNDERLAY_COLOR} onPress={onPress}>
             <View style={ContainerStyles}>
-                <Text style={TextStyle}>SUBMIT</Text>
+                <Text style={TextStyle}>{text}</Text>
             </View>
         </TouchableHighlight>
     )
