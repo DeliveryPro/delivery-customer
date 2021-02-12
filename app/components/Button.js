@@ -5,7 +5,7 @@ import { PRIMARY_COLOR, SECONDARY_COLOR, UNDERLAY_COLOR } from '../constants/col
 
 const useStyles = StyleSheet.create((theme) => ({
     button: {
-        padding: 15,
+        padding: 35,
     },
     buttonContainer: {
         display: 'flex',
