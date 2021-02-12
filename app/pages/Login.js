@@ -7,7 +7,7 @@ import LogoBox from '../components/LogoBox'
 
 import { PRIMARY, SECONDARY } from '../constants/buttonTypes'
 import { PRIMARY_COLOR, UNDERLAY_COLOR } from '../constants/colors'
-import { REGISTRATION } from '../constants/pages'
+import { FORGOT_PASSWORD, REGISTRATION } from '../constants/pages'
 import { SCREEN_WIDTH } from '../constants/screen'
 
 import Google from '../assets/google.svg'
@@ -54,6 +54,12 @@ const useStyles = StyleSheet.create((theme) => ({
     googleText: {
         paddingLeft: 10,
     },
+    linkToForgotPassword:{
+        color:PRIMARY_COLOR,
+    },
+    forgotPasswordContainer: {
+        marginRight: SCREEN_WIDTH/3.5
+    }
 }))
 
 const EMAIL_TYPE = 'email'
@@ -93,6 +99,9 @@ const Login = ({ navigation }) => {
                 />
 
                 <View style={classes.buttonContainer}>
+                    <TouchableHighlight style={classes.forgotPasswordContainer} underlayColor={UNDERLAY_COLOR} onPress={to(FORGOT_PASSWORD)}>
+                        <Text style={classes.linkToForgotPassword}>Forgot Password?</Text>
+                    </TouchableHighlight>
                     <Button type={email && pass ? PRIMARY : SECONDARY} />
                 </View>
             </View>
