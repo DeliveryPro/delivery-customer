@@ -41,12 +41,12 @@ const Tabs = ({ activeScreen = MAIN, ...props }) => {
     return (
         <View style={classes.root}>
             <TabContext.Provider value={props}>
-                <TabItem name={MAIN} icon={<List fill={getColor(MAIN)} width={ICON_SIDE} height={ICON_SIDE} />} />
+                <TabItem name={MAIN} icon={<List stroke={getColor(MAIN)} width={ICON_SIDE} height={ICON_SIDE} />} />
                 <TabItem
                     name={QR_CODE_SCANNER}
-                    icon={<QR fill={getColor(QR_CODE_SCANNER)} width={ICON_SIDE} height={ICON_SIDE} />}
+                    icon={<QR stroke={getColor(QR_CODE_SCANNER)} width={ICON_SIDE} height={ICON_SIDE} />}
                 />
-                <TabItem name={MAP} icon={<Map fill={getColor(MAP)} width={ICON_SIDE} height={ICON_SIDE} />} />
+                <TabItem name={MAP} icon={<Map stroke={getColor(MAP)} width={ICON_SIDE} height={ICON_SIDE} />} />
             </TabContext.Provider>
         </View>
     )

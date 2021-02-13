@@ -31,13 +31,13 @@ const Header = ({ navigation }) => {
     return (
         <View style={classes.root}>
             <TouchableHighlight underlayColor={UNDERLAY_COLOR} onPress={to(NEW_PACKAGE)}>
-                <Add width={50} height={50} />
+                <Add width={30} height={50} />
             </TouchableHighlight>
 
             <Logo width={50} height={50} />
 
             <TouchableHighlight underlayColor={UNDERLAY_COLOR} onPress={to(PROFILE)}>
-                <Profile />
+                <Profile width={30} height={50} />
             </TouchableHighlight>
         </View>
     )
