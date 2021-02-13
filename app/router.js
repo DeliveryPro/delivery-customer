@@ -55,7 +55,7 @@ const UnAuthRoutes = () => (
 )
 
 const Router = () => {
-    const isAuth = false
+    const isAuth = true
     return isAuth ? <AuthRoutes /> : <UnAuthRoutes />
 }
 
