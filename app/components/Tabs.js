@@ -20,6 +20,7 @@ const useStyles = StyleSheet.create((theme) => ({
         bottom: 0,
         flexDirection: 'row',
         justifyContent: 'space-between',
+        backgroundColor:"#fff"
     },
     itemWrapper: {
         borderColor: '#eee',
