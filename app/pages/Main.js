@@ -42,7 +42,7 @@ const packages = [
 
 const Home = (props) => {
     const classes = useStyles()
-    const loading = true
+    const loading = false
 
     return (
         <View style={classes.root}>
