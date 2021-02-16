@@ -1,0 +1,4 @@
+#!/bin/bash
+LOG_FILE=./logfile
+exec > >(tee ${LOG_FILE}) 2>&1
+cd ./android && ./gradlew :app:dependencies
