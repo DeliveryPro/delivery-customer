@@ -1,10 +1,11 @@
 import React from 'react'
-import { StyleSheet, Text, View, AppRegistry, TouchableHighlight, Linking } from 'react-native'
+import { StyleSheet, Text, View, TouchableHighlight } from 'react-native'
 import Tabs from '../components/Tabs'
 import { QR_CODE_SCANNER } from '../constants/pages'
 import QRCode from 'react-native-qrcode-scanner'
 import { RNCamera } from 'react-native-camera'
-import { UNDERLAY_COLOR } from '../constants/colors'
+import { SCREEN_HEIGHT } from '../constants/screen'
+import { SECONDARY_COLOR } from '../constants/colors'
 
 const useStyles = StyleSheet.create((theme) => ({
     root: {
@@ -18,43 +19,48 @@ const useStyles = StyleSheet.create((theme) => ({
         padding: 32,
         color: '#777',
     },
-    textBold: {
-        fontWeight: '500',
-        color: '#000',
-    },
-    buttonText: {
-        fontSize: 21,
-        color: 'rgb(0,122,255)',
-    },
     buttonTouchable: {
         padding: 16,
     },
+    text: {
+        fontSize: 20,
+        color: '#fff',
+    },
+    qrContainer: {
+        display: 'flex',
+        flex: 1,
+        height: '100%',
+        margin: 0,
+        borderRadius: 5,
+    },
+    topContent: {
+        display: 'flex',
+        maxHeight: 80,
+        zIndex: 100,
+        color: '#000',
+    },
+    noView: {
+        display: 'flex',
+        maxHeight: 0,
+    },
 }))
-
 
 const QRCodeScanner = (props) => {
     const classes = useStyles()
 
     const onSuccess = (e) => {
-        Linking.openURL(e.data).catch((err) => console.error('An error occured', err))
+        console.log('e data => ', e.data)
     }
 
     return (
         <View style={classes.root}>
-         <QRCode
+            <QRCode
+                topViewStyle={classes.topContent}
+                topContent={<Text styles={classes.text}>Scan QR Code on the box</Text>}
+                bottomViewStyle={classes.noView}
                 onRead={onSuccess}
+                containerStyle={classes.qrContainer}
                 flashMode={RNCamera.Constants.FlashMode.torch}
-                topContent={
-                    <Text style={classes.centerText}>
-                        Go to <Text style={classes.textBold}>wikipedia.org/wiki/QR_code</Text> on your computer and scan
-                        the QR code.
-                    </Text>
-                }
-                bottomContent={
-                    <TouchableHighlight underlayColor={UNDERLAY_COLOR} style={classes.buttonTouchable}>
-                        <Text style={classes.buttonText}>OK. Got it!</Text>
-                    </TouchableHighlight>
-                }
             />
             <Tabs activeScreen={QR_CODE_SCANNER} {...props} />
         </View>
