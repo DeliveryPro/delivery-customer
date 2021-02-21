@@ -1,13 +1,21 @@
 import 'react-native-gesture-handler'
-import * as React from 'react'
+import React from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import Router from './router'
+import AuthContext from './AuthContext'
+import ErrorContext from './ErrorContext'
+import AuthReducer from './rsm/reducers/auth'
+import ErrorReducer from './rsm/reducers/error'
 
 const App = () => {
     return (
-        <NavigationContainer>
-            <Router />
-        </NavigationContainer>
+        <ErrorContext.Provider value={ErrorReducer()}>
+            <AuthContext.Provider value={AuthReducer()}>
+                <NavigationContainer>
+                    <Router />
+                </NavigationContainer>
+            </AuthContext.Provider>
+        </ErrorContext.Provider>
     )
 }
 
