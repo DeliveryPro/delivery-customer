@@ -10,7 +10,7 @@ import ConfirmPasswordScreen from './pages/ConfirmPassword'
 import MapScreen from './pages/Map'
 import QRCodeScannerScreen from './pages/QRCodeScanner'
 
-import AuthContext from './AuthContext'
+// import AuthContext from './AuthContext'
 
 import {
     MAIN,
@@ -57,8 +57,8 @@ const UnAuthRoutes = () => (
 )
 
 const Router = () => {
-    const { isAuth } = useContext(AuthContext)
-
+    // const { isAuth = false } = useContext(AuthContext)
+    const isAuth = false
     return isAuth ? <AuthRoutes /> : <UnAuthRoutes />
 }
 

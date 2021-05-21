@@ -12,12 +12,6 @@ const config = {
 
 const axiosInstance = axios.create(config)
 
-axiosInstance.interceptors.request.use((req) => {
-    console.log('req', apiUrl)
-    req.url = apiUrl + req.url
-    return req
-})
-
 export const getRequestWithFilters = (filters) =>
     Object.keys(filters).reduce((prev, key) => {
         if (typeof filters[key] !== 'undefined') {
@@ -55,6 +49,7 @@ export const POST = async (link, data = {}) => {
         const res = await axiosInstance.post(link, qs.stringify(data))
 
         if (res?.status === 200) {
+            console.log('res', res.data)
             return res
         }
     } catch (error) {

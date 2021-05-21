@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { Text, StyleSheet, View, TouchableHighlight, KeyboardAvoidingView } from 'react-native'
 import { GoogleSignin } from '@react-native-community/google-signin'
+import { useDispatch, useSelector } from 'react-redux'
 
 import AuthContext from '../AuthContext'
-import ErrorContext from '../ErrorContext'
+// import ErrorContext from '../ErrorContext'
 
 import Button from '../components/Button'
 import Input from '../components/Input'
@@ -16,7 +17,9 @@ import { SCREEN_WIDTH } from '../constants/screen'
 
 import Google from '../assets/google.svg'
 import { loginUserFunction } from '../api'
+import { googleAuthAction } from '../redux/actions/auth-action'
 
+import { isUserAuthSelector } from '../redux/selectors/auth-selector'
 
 GoogleSignin.configure()
 
@@ -76,12 +79,15 @@ const PASSWORD_TYPE = 'pass'
 const Login = ({ navigation }) => {
     const classes = useStyles()
 
-    const { isAuth, setIsAuth } = React.useContext(AuthContext)
-    const { message, onError, hideError } = React.useContext(ErrorContext)
+    // const { isAuth, setIsAuth } = React.useContext(AuthContext)
+    // const { message, onError, hideError } = React.useContext(ErrorContext)
 
     const [email, setEmail] = useState('')
     const [pass, setPass] = useState('')
     const [googleRes, setGoogleRes] = useState(null)
+
+    const dispatch = useDispatch()
+    const isAuth = useSelector(isUserAuthSelector)
 
     const onChange = (v) => (e) => {
         if (v === EMAIL_TYPE) setEmail(e)
@@ -89,6 +95,7 @@ const Login = ({ navigation }) => {
     }
 
     const onSubmit = () => {
+        loginUserFunction({ email, pass })
         console.log('email, pass => ', email, pass)
     }
 
@@ -100,15 +107,15 @@ const Login = ({ navigation }) => {
             const res = await GoogleSignin.signIn()
             if (res) setGoogleRes(res)
         } catch (error) {
-            onError({ error, message: 'googleError' })
+            // onError({ error, message: 'googleError' })
         }
     }
 
     useEffect(() => {
         if (!!googleRes) {
             console.log('googleRes', googleRes)
-            loginUserFunction({ token: 'text' })
-            setIsAuth()
+            dispatch(googleAuthAction({ ...googleRes }))
+            // setIsAuth()
         }
     }, [googleRes])
 
@@ -137,7 +144,7 @@ const Login = ({ navigation }) => {
                     >
                         <Text style={classes.linkToForgotPassword}>Forgot Password?</Text>
                     </TouchableHighlight>
-                    <Button type={email && pass ? PRIMARY : SECONDARY} />
+                    <Button type={email && pass ? PRIMARY : SECONDARY} onPress={onSubmit} />
                 </View>
             </View>
             <TouchableHighlight underlayColor={UNDERLAY_COLOR} onPress={googleLoginFunction}>
