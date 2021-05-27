@@ -9,6 +9,7 @@ import ForgotPasswordScreen from './pages/ForgotPassword'
 import ConfirmPasswordScreen from './pages/ConfirmPassword'
 import MapScreen from './pages/Map'
 import QRCodeScannerScreen from './pages/QRCodeScanner'
+import NewPackageScreen from './pages/AddNewDelivery'
 
 // import AuthContext from './AuthContext'
 
@@ -22,9 +23,12 @@ import {
     FORGOT_PASSWORD,
     DELIVERY_INFO,
     CONFIRM_PASSWORD,
+    NEW_PACKAGE,
 } from './constants/pages'
 
 import Header from './components/Header'
+import { useSelector } from 'react-redux'
+import { isUserAuthSelector } from './redux/selectors/auth-selector'
 
 const Stack = createStackNavigator()
 
@@ -41,6 +45,7 @@ const AuthRoutes = () => (
     <Stack.Navigator>
         <Stack.Screen name={MAIN} component={MainScreen} options={HeaderShown} />
         <Stack.Screen name={MAP} component={MapScreen} options={HeaderShown} />
+        <Stack.Screen name={NEW_PACKAGE} component={NewPackageScreen} options={NoHeader} />
         <Stack.Screen name={PROFILE} component={ProfileScreen} />
         <Stack.Screen name={DELIVERY_INFO} component={ProfileScreen} />
         <Stack.Screen name={QR_CODE_SCANNER} component={QRCodeScannerScreen} options={HeaderShown} />
@@ -57,8 +62,7 @@ const UnAuthRoutes = () => (
 )
 
 const Router = () => {
-    // const { isAuth = false } = useContext(AuthContext)
-    const isAuth = false
+    const isAuth  = useSelector(isUserAuthSelector)
     return isAuth ? <AuthRoutes /> : <UnAuthRoutes />
 }
 

@@ -16,8 +16,7 @@ import { FORGOT_PASSWORD, REGISTRATION } from '../constants/pages'
 import { SCREEN_WIDTH } from '../constants/screen'
 
 import Google from '../assets/google.svg'
-import { loginUserFunction } from '../api'
-import { googleAuthAction } from '../redux/actions/auth-action'
+import { googleAuthAction, loginWithEmailAction } from '../redux/actions/auth-action'
 
 import { isUserAuthSelector } from '../redux/selectors/auth-selector'
 
@@ -74,7 +73,7 @@ const useStyles = StyleSheet.create((theme) => ({
 }))
 
 const EMAIL_TYPE = 'email'
-const PASSWORD_TYPE = 'pass'
+const PASSWORD_TYPE = 'password'
 
 const Login = ({ navigation }) => {
     const classes = useStyles()
@@ -83,7 +82,7 @@ const Login = ({ navigation }) => {
     // const { message, onError, hideError } = React.useContext(ErrorContext)
 
     const [email, setEmail] = useState('')
-    const [pass, setPass] = useState('')
+    const [password, setPassword] = useState('')
     const [googleRes, setGoogleRes] = useState(null)
 
     const dispatch = useDispatch()
@@ -91,12 +90,13 @@ const Login = ({ navigation }) => {
 
     const onChange = (v) => (e) => {
         if (v === EMAIL_TYPE) setEmail(e)
-        if (v === PASSWORD_TYPE) setPass(e)
+        if (v === PASSWORD_TYPE) setPassword(e)
     }
 
     const onSubmit = () => {
-        loginUserFunction({ email, pass })
-        console.log('email, pass => ', email, pass)
+        dispatch(loginWithEmailAction({ email, password }))
+        // dispatch(loginUserFunction({ email, pass }))
+        console.log('email, pass => ', email, password)
     }
 
     const to = (page) => () => navigation.navigate(page)
@@ -113,9 +113,7 @@ const Login = ({ navigation }) => {
 
     useEffect(() => {
         if (!!googleRes) {
-            console.log('googleRes', googleRes)
             dispatch(googleAuthAction({ ...googleRes }))
-            // setIsAuth()
         }
     }, [googleRes])
 
@@ -128,7 +126,7 @@ const Login = ({ navigation }) => {
                 </View>
                 <Input value={email} placeholder="Email" label="Email" onChange={onChange(EMAIL_TYPE)} />
                 <Input
-                    value={pass}
+                    value={password}
                     placeholder="Password"
                     secureTextEntry
                     textContentType="password"
@@ -144,7 +142,7 @@ const Login = ({ navigation }) => {
                     >
                         <Text style={classes.linkToForgotPassword}>Forgot Password?</Text>
                     </TouchableHighlight>
-                    <Button type={email && pass ? PRIMARY : SECONDARY} onPress={onSubmit} />
+                    <Button type={email && password ? PRIMARY : SECONDARY} onPress={onSubmit} />
                 </View>
             </View>
             <TouchableHighlight underlayColor={UNDERLAY_COLOR} onPress={googleLoginFunction}>

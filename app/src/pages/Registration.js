@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Text, StyleSheet, View, TouchableHighlight, KeyboardAvoidingView } from 'react-native'
+import { useDispatch } from 'react-redux'
 
 import Button from '../components/Button'
 import Input from '../components/Input'
@@ -9,6 +10,7 @@ import { PRIMARY, SECONDARY } from '../constants/buttonTypes'
 import { PRIMARY_COLOR, UNDERLAY_COLOR } from '../constants/colors'
 import { LOGIN } from '../constants/pages'
 import { SCREEN_WIDTH } from '../constants/screen'
+import { registerUserWithEmailAction } from '../redux/actions/auth-action'
 
 const useStyles = StyleSheet.create((theme) => ({
     root: {
@@ -41,20 +43,23 @@ const useStyles = StyleSheet.create((theme) => ({
 }))
 
 const EMAIL_TYPE = 'email'
-const PASSWORD_TYPE = 'pass'
+const PASSWORD_TYPE = 'password'
 
 const Registration = ({ navigation }) => {
     const classes = useStyles()
     const [email, setEmail] = useState()
-    const [pass, setPass] = useState()
+    const [password, setPassword] = useState()
 
     const onChange = (v) => (e) => {
         if (v === EMAIL_TYPE) setEmail(e)
-        if (v === PASSWORD_TYPE) setPass(e)
+        if (v === PASSWORD_TYPE) setPassword(e)
     }
 
+    const dispatch = useDispatch()
+
     const onSubmit = () => {
-        console.log('email, pass => ', email, pass)
+        console.log('email, pass => ', email, password)
+        dispatch(registerUserWithEmailAction({email, password}))
     }
 
     const to = (page) => () => navigation.navigate(page)
@@ -68,7 +73,7 @@ const Registration = ({ navigation }) => {
                 </View>
                 <Input value={email} placeholder="Email" label="Email" onChange={onChange(EMAIL_TYPE)} />
                 <Input
-                    value={pass}
+                    value={password}
                     placeholder="Password"
                     secureTextEntry
                     textContentType="password"
@@ -77,7 +82,7 @@ const Registration = ({ navigation }) => {
                 />
 
                 <View style={classes.buttonContainer}>
-                    <Button type={email && pass ? PRIMARY : SECONDARY} text="Sign Up" />
+                    <Button type={email && password ? PRIMARY : SECONDARY} text="Sign Up" onPress={onSubmit} />
                 </View>
             </View>
             <View style={{ ...classes.textContainer, ...classes.textMargin }}>

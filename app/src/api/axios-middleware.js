@@ -1,9 +1,7 @@
 import { POST } from './axios-config'
 
-export const loginUser = data => POST(`login`, data)
+export const loginUser = (data) => POST(`login`, data)
 
-export const mailSender = (data) => POST('/mailer', data)
+export const loginWithEmail = (data) => POST('loginWithEmail', data)
 
-export const passwordRestore = data => POST('/passwordRestoration', data)
-
-export const addAnswer = data => POST('/addAnswer', data)
+export const registerUser = (data) => POST('registerUser', data)
