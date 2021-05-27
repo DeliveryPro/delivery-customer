@@ -22,7 +22,7 @@ export const loginWithEmailAction = (data) => async (dispatch) => {
     try {
         const res = await ExternalApi.loginWithEmail(data)
         if (res) {
-            dispatch(loginSuccess(res.message))
+            dispatch(loginSuccess(res.uid))
             // setAuth({ user_id: res.message.user_id, username, password })
         }
     } catch (e) {
@@ -35,7 +35,7 @@ export const googleAuthAction = (data) => async (dispatch) => {
     try {
         const res = await ExternalApi.loginUser(data)
         if (res) {
-            dispatch(loginSuccess(res.message))
+            dispatch(loginSuccess(res.uid))
             // setAuth({ user_id: res.message.user_id, username, password })
         }
     } catch (e) {

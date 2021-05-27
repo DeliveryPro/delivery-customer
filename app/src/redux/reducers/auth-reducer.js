@@ -4,6 +4,7 @@ import { loginSuccess, registerUserSuccess } from '../actions/auth-action'
 
 const defaultState = {
     isAuth: false,
+    uid: null,
 }
 
 const authReducer = handleActions(
@@ -11,8 +12,9 @@ const authReducer = handleActions(
         [loginSuccess]: (state, { payload }) => ({
             ...state,
             isAuth: true,
+            uid: payload,
         }),
-        [registerUserSuccess]: (state) => ({
+        [registerUserSuccess]: (state, { payload }) => ({
             ...state,
         }),
     },

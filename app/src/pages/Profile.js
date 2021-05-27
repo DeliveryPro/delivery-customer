@@ -11,6 +11,9 @@ import Folder from '../assets/folder.svg'
 import User from '../assets/profile.svg'
 import Input from '../components/Input'
 import Button from '../components/Button'
+import { useDispatch, useSelector } from 'react-redux'
+import { getUserDataSelector, getUserIdSelector } from '../redux/selectors/user-selector'
+import { getUserDataAction } from '../redux/actions/user-action'
 
 const useStyles = StyleSheet.create((theme) => ({
     root: {
@@ -72,7 +75,7 @@ const useStyles = StyleSheet.create((theme) => ({
         borderWidth: 1,
         margin: 10,
         marginBottom: 0,
-        borderRadius:4,
+        borderRadius: 4,
         borderColor: SECONDARY_COLOR,
     },
     text: {
@@ -92,49 +95,69 @@ const CAMERA_VARIABLES = {
     includeBase64: true,
 }
 
-const NAME = 'name'
-const BIRTH_DATE = 'birth_date'
-const ADDRESS = 'address'
+const PROFILE_FIELDS = {
+    NAME: {
+        name: 'name',
+    },
+    EMAIL: {
+        name: 'email',
+    },
+    BIRTH_DATE: {
+        name: 'birth_date',
+    },
+    ADDRESS: {
+        name: 'address',
+    },
+    IMAGE: {
+        name: 'photo',
+    },
+}
 
 const Profile = ({ route }) => {
     const [modalAvatarSourcePicker, setModalAvatarSourcePicker] = useState(false)
     const [avatarSource, setAvatarSource] = useState(null)
-    const [image, setImage] = useState(null)
-    const [birth, setBirth] = useState(new Date())
+    const [data, setData] = useState({})
     const [visibleModalDatePicker, setVisibleModalDatePicker] = useState(new Date())
-    const [name, setName] = useState(null)
-    const [address, setAddress] = useState(null)
 
     const classes = useStyles()
     const modalCallAvatar = () => setModalAvatarSourcePicker(!modalAvatarSourcePicker)
     const modalCallDate = () => setVisibleModalDatePicker(!visibleModalDatePicker)
+
     const setImageGetterSource = (source) => () => setAvatarSource(source)
+
+    const dispatch = useDispatch()
+    const uid = useSelector(getUserIdSelector)
+    const userData = useSelector(getUserDataSelector)
+
+    useEffect(() => {
+        if (uid) dispatch(getUserDataAction(uid))
+    }, [uid])
+
+    useEffect(() => {
+        if (userData) setData(userData)
+    }, [userData])
 
     const folderImagePicker = async () => {
         const img = await ImagePicker.openPicker(CAMERA_VARIABLES)
-        setImage(img)
+        setValue(PROFILE_FIELDS.IMAGE.name)(img)
         modalCallAvatar()
     }
     const cameraImagePicker = async () => {
         const img = await ImagePicker.openCamera(CAMERA_VARIABLES)
-        setImage(img)
+        setValue(PROFILE_FIELDS.IMAGE.name)(img)
         modalCallAvatar()
     }
 
     useEffect(() => {
-        if (!!avatarSource) {
-            if (avatarSource === CAMERA) cameraImagePicker()
-            if (avatarSource === FILES) folderImagePicker()
-        }
+        if (!Boolean(avatarSource)) return
+        if (avatarSource === CAMERA) cameraImagePicker()
+        if (avatarSource === FILES) folderImagePicker()
     }, [avatarSource])
 
     const setValue = (type) => (value) => {
-        if (type === NAME) setName(value)
-        if (type === BIRTH_DATE) {
-            console.log('value', value)
-            setBirth(value)
-        }
-        if (type === ADDRESS) setAddress(value)
+        const d = { ...data }
+        d[type] = value
+        setData(d)
     }
 
     return (
@@ -146,8 +169,18 @@ const Profile = ({ route }) => {
             />
             <TouchableHighlight onPress={modalCallAvatar}>
                 <View style={classes.avatarContainer}>
-                    {image?.path ? (
-                        <Image style={classes.logo} source={{ uri: `data:${image.mime};base64,${image.data}` }} />
+                    {data[PROFILE_FIELDS.IMAGE.name]?.path ? (
+                        <Image
+                            style={classes.logo}
+                            source={{
+                                uri: `${data[PROFILE_FIELDS.IMAGE.name]}`,
+                                //  data[PROFILE_FIELDS.IMAGE.name]?.data
+                                //     ? `data:${data[PROFILE_FIELDS.IMAGE.name].mime};base64,${
+                                //           data[PROFILE_FIELDS.IMAGE.name].data
+                                //       }`
+                                //     : data[PROFILE_FIELDS.IMAGE.name],
+                            }}
+                        />
                     ) : (
                         <View style={classes.logo}>
                             <User width={IMAGE_SIZE / 1.2} height={IMAGE_SIZE / 1.2} />
@@ -156,23 +189,46 @@ const Profile = ({ route }) => {
                 </View>
             </TouchableHighlight>
             <View style={classes.inputContainer}>
-                <Input placeholder="Name/Surname" contentType="" onChange={setValue(NAME)} value={name} />
+                <Input
+                    placeholder="Name/Surname"
+                    contentType=""
+                    onChange={setValue(PROFILE_FIELDS.NAME.name)}
+                    value={data[PROFILE_FIELDS.NAME.name]}
+                />
+            </View>
+            <View style={classes.inputContainer}>
+                <Input
+                    placeholder="Email"
+                    contentType=""
+                    onChange={setValue(PROFILE_FIELDS.EMAIL.name)}
+                    value={data[PROFILE_FIELDS.EMAIL.name]}
+                />
             </View>
             <View style={classes.inputContainer}>
                 <TouchableHighlight onPress={modalCallDate}>
                     <View style={classes.dateContainer}>
-                        <Text style={classes.text}>{birth.toString().substr(0, 15)}</Text>
+                        {data[PROFILE_FIELDS.BIRTH_DATE.name] ? (
+                            <Text style={classes.text}>
+                                {data[PROFILE_FIELDS.BIRTH_DATE.name]?.toString().substr(0, 15)}
+                            </Text>
+                        ) : (
+                            <Text style={classes.text}>Birthday</Text>
+                        )}
                     </View>
                 </TouchableHighlight>
                 <ModalDatePicker
-                    birth={birth}
+                    birth={data[PROFILE_FIELDS.BIRTH_DATE.name]}
                     visible={visibleModalDatePicker}
                     closeModal={modalCallDate}
-                    setTime={setValue}
+                    setTime={setValue(PROFILE_FIELDS.BIRTH_DATE.name)}
                 />
             </View>
             <View style={classes.inputContainer}>
-                <Input placeholder="Address" onChange={setValue(ADDRESS)} value={address} />
+                <Input
+                    placeholder="Address"
+                    onChange={setValue(PROFILE_FIELDS.ADDRESS.name)}
+                    value={data[PROFILE_FIELDS.ADDRESS.name]}
+                />
             </View>
 
             <Text>total send</Text>
@@ -183,10 +239,11 @@ const Profile = ({ route }) => {
 
 const ModalDatePicker = ({ visible, birth, closeModal, setTime }) => {
     const classes = useStyles()
+    const dateNow = new Date()
     return (
         <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={closeModal}>
             <View style={classes.modal}>
-                <DatePicker mode="date" style={{ maxWidth: '100%' }} date={birth} onDateChange={setTime(BIRTH_DATE)} />
+                <DatePicker mode="date" style={{ maxWidth: '100%' }} date={birth || dateNow} onDateChange={setTime} />
                 <View style={classes.buttonContainer}>
                     <Button onPress={closeModal} />
                 </View>
