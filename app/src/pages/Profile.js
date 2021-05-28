@@ -13,7 +13,7 @@ import Input from '../components/Input'
 import Button from '../components/Button'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserDataSelector, getUserIdSelector } from '../redux/selectors/user-selector'
-import { getUserDataAction, updateUserPhotoAction } from '../redux/actions/user-action'
+import { getUserDataAction, updateUserAction, updateUserPhotoAction } from '../redux/actions/user-action'
 import { logOutUserAction } from '../redux/actions/auth-action'
 
 const useStyles = StyleSheet.create((theme) => ({
@@ -118,6 +118,7 @@ const Profile = ({ route }) => {
     const [modalAvatarSourcePicker, setModalAvatarSourcePicker] = useState(false)
     const [avatarSource, setAvatarSource] = useState(null)
     const [data, setData] = useState({})
+    const [changed, setChanged] = useState(false)
     const [visibleModalDatePicker, setVisibleModalDatePicker] = useState(new Date())
 
     const classes = useStyles()
@@ -161,6 +162,14 @@ const Profile = ({ route }) => {
         const d = { ...data }
         d[type] = value
         setData(d)
+        setChanged(true)
+    }
+
+    const onSave = () => {
+        delete data[PROFILE_FIELDS.IMAGE.name]
+        data[PROFILE_FIELDS.BIRTH_DATE.name] = new Date(data[PROFILE_FIELDS.BIRTH_DATE.name]).toDateString()
+        dispatch(updateUserAction(uid, data))
+        setChanged(false)
     }
 
     const logOut = () => dispatch(logOutUserAction())
@@ -234,6 +243,11 @@ const Profile = ({ route }) => {
                     value={data[PROFILE_FIELDS.ADDRESS.name]}
                 />
             </View>
+            {changed && (
+                <View style={classes.buttonContainer}>
+                    <Button onPress={onSave} text="Submit" />
+                </View>
+            )}
 
             <Text>total send</Text>
             <Text>total received</Text>
