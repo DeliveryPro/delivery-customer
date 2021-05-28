@@ -7,6 +7,7 @@ import Button from '../components/Button'
 import { useDispatch, useSelector } from 'react-redux'
 import { getDeliveryCreationStateSelector } from '../redux/selectors/delivery-selector'
 import { createNewDeliveryAction } from '../redux/actions/delivery-action'
+import { getUserIdSelector } from '../redux/selectors/user-selector'
 
 const useStyles = StyleSheet.create((theme) => ({
     root: {
@@ -60,6 +61,7 @@ const AddNewDelivery = ({ navigation, route }) => {
         setData(d)
     }
 
+    const uid = useSelector(getUserIdSelector)
     const deliveryState = useSelector(getDeliveryCreationStateSelector)
 
     const dispatch = useDispatch()
@@ -96,12 +98,10 @@ const AddNewDelivery = ({ navigation, route }) => {
         return false
     }
 
-    const onSubmit = () => {
-        const position = isUserHasLocationPermission() && getUserLocation()
-        dispatch(createNewDeliveryAction({ ...data, position }))
+    const onSubmit = async () => {
+        const position = isUserHasLocationPermission() && await getUserLocation()
+        dispatch(createNewDeliveryAction(uid, { ...data, position }))
     }
-
-    console.log('deliveryState =>', deliveryState)
 
     return (
         <View style={classes.root}>

@@ -3,7 +3,7 @@ import logger from './logger'
 
 const _store = async ({ key, data }) => {
     try {
-        await AsyncStorage.setItem(key, JSON.stringify(data))
+        data && (await AsyncStorage.setItem(key, JSON.stringify(data)))
     } catch (e) {
         logger('AsyncStorageUtils _store', e)
     }

@@ -57,7 +57,7 @@ const PackageItem = ({ item: { id, status, from, to, description } }) => {
         classes.text = { ...classes.text, ...classes.inactive }
     }
 
-    const codeSplitter = (text) => (text.length > 26 ? `${text.substr(0, 26).trim()} ...` : text)
+    const codeSplitter = (text) => (text?.length > 26 ? `${text.substr(0, 26).trim()} ...` : text)
 
     return (
         <View style={classes.root}>
