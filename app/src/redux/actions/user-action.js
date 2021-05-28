@@ -1,4 +1,4 @@
-import { ExternalApi, Users } from '../../api'
+import { ExternalApi, Users, Photo } from '../../api'
 import { createAction } from 'redux-actions'
 import logger from '../../utils/logger'
 
@@ -9,6 +9,8 @@ import {
     GET_USER_DATA_SUCCESS,
     UPDATE_USER_DATA_START,
     UPDATE_USER_DATA_SUCCESS,
+    UPDATE_USER_PHOTO_START,
+    UPDATE_USER_PHOTO_SUCCESS,
 } from '../types'
 import { errorHandler } from './error-action'
 
@@ -37,6 +39,23 @@ export const updateUserAction = (userId, data) => async (dispatch) => {
     try {
         const res = await Users.updateUser(userId, data)
         if (res) dispatch(updateUserSuccess(res))
+    } catch (e) {
+        dispatch(errorHandler(USERS_PAGE, e))
+    }
+}
+
+export const updateUserPhotoStart = createAction(UPDATE_USER_PHOTO_START)
+export const updateUserPhotoSuccess = createAction(UPDATE_USER_PHOTO_SUCCESS)
+
+export const updateUserPhotoAction = (uid, data) => async (dispatch) => {
+    logger('updateUserPhotoAction')
+    dispatch(updateUserPhotoStart())
+    try {
+        const photo_link = await Photo.uploadPhoto(uid, data)
+        if (photo_link) {
+            dispatch(updateUserAction(uid, { photo: photo_link }))
+			dispatch(updateUserPhotoSuccess())
+        }
     } catch (e) {
         dispatch(errorHandler(USERS_PAGE, e))
     }

@@ -13,7 +13,7 @@ import Input from '../components/Input'
 import Button from '../components/Button'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserDataSelector, getUserIdSelector } from '../redux/selectors/user-selector'
-import { getUserDataAction } from '../redux/actions/user-action'
+import { getUserDataAction, updateUserPhotoAction } from '../redux/actions/user-action'
 import { logOutUserAction } from '../redux/actions/auth-action'
 
 const useStyles = StyleSheet.create((theme) => ({
@@ -141,11 +141,13 @@ const Profile = ({ route }) => {
     const folderImagePicker = async () => {
         const img = await ImagePicker.openPicker(CAMERA_VARIABLES)
         setValue(PROFILE_FIELDS.IMAGE.name)(img)
+        dispatch(updateUserPhotoAction(uid, img))
         modalCallAvatar()
     }
     const cameraImagePicker = async () => {
         const img = await ImagePicker.openCamera(CAMERA_VARIABLES)
         setValue(PROFILE_FIELDS.IMAGE.name)(img)
+        dispatch(updateUserPhotoAction(uid, img))
         modalCallAvatar()
     }
 

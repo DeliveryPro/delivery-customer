@@ -7,12 +7,15 @@ import {
     getUserDataSuccess,
     updateUserStart,
     updateUserSuccess,
+    updateUserPhotoStart,
+    updateUserPhotoSuccess,
 } from '../actions/user-action'
 
 const defaultState = {
     loading: false,
     isUserLoading: false,
     isCredentialSending: false,
+    isUserPhotoUploading: false,
     data: {},
 }
 
@@ -43,6 +46,14 @@ const notificationReducer = handleActions(
             ...state,
             isUserLoading: false,
             data: payload || {},
+        }),
+        [updateUserPhotoStart]: (state) => ({
+            ...state,
+            isUserPhotoUploading: true,
+        }),
+        [updateUserPhotoSuccess]: (state) => ({
+            ...state,
+            isUserPhotoUploading: false,
         }),
     },
     defaultState,

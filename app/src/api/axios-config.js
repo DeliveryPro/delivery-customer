@@ -1,5 +1,4 @@
 import axios from 'axios'
-// import { clearAuth } from 'utils/localStorageHandler.js'
 import logger from '../utils/logger.js'
 import qs from 'qs'
 import { REACT_APP_API_URL } from '@env'
@@ -10,10 +9,6 @@ const config = {
 
 const axiosInstance = axios.create(config)
 
-// axiosInstance.interceptors.request.use((req) => {
-//     logger('axiosInstance', req)
-//     return req
-// })
 
 export const getRequestWithFilters = (filters) =>
     Object.keys(filters).reduce((prev, key) => {
@@ -45,13 +40,10 @@ export const GET = async (link, filters = {}) => {
 
 export const POST = async (link, data = {}) => {
     try {
-        console.log(`REACT_APP_API_URL`, REACT_APP_API_URL + link, data)
         const res = await axiosInstance.post(link, qs.stringify(data))
-        console.log('res => ',res.data)
+        console.log('res => ', res.data)
 
-        if (res?.status === 200) {
-            return res.data
-        }
+        if (res?.status === 200) return res.data
     } catch (error) {
         logger(`error in POST link = ${link}`, error)
         throw error.response.data?.message || error
@@ -60,12 +52,9 @@ export const POST = async (link, data = {}) => {
 
 export const PATCH = async (link, data = {}) => {
     try {
-        console.log(`axiosInstance, config`, axiosInstance, config)
         const res = await axiosInstance.patch(link, data)
 
-        if (res?.status === 200) {
-            return res.data
-        }
+        if (res?.status === 200) return res.data
     } catch (error) {
         logger(`error in PATCH link = ${link}`, error)
         throw error.response.data?.message || error
@@ -76,11 +65,7 @@ export const DELETE = async (link, data = {}) => {
     try {
         const res = await axiosInstance.delete(link, { data })
 
-        if (res?.status === 204) {
-            // clearAuth()
-            window.location.reload()
-            return res.data
-        }
+        if (res?.status === 204) return res.data
     } catch (error) {
         logger(`error in DELETE link = ${link}`, error)
         throw error.response.data?.message || error
