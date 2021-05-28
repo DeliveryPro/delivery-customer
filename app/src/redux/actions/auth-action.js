@@ -1,13 +1,8 @@
-// import {  } from "api";
-
 import { createAction } from 'redux-actions'
-// import { getAuth, setAuth } from "utils/localstorage-handler";
 
-import { LOGIN_SUCCESS, LOGIN_START, REGISTER_USER_SUCCESS, REGISTER_USER_START } from '../types'
+import { LOGIN_SUCCESS, LOGIN_START, REGISTER_USER_SUCCESS, REGISTER_USER_START, LOG_OUT_SUCCESS } from '../types'
 
 import { errorHandler } from './error-action'
-// import { notificationsShower } from "redux/actions/notification-action";
-// import types from "constants";
 import logger from '../../utils/logger'
 import { ExternalApi } from '../../api'
 
@@ -57,4 +52,11 @@ export const registerUserWithEmailAction = (data) => async (dispatch) => {
     } catch (e) {
         dispatch(errorHandler(LOGIN_PAGE, e))
     }
+}
+
+export const logOutSuccess = createAction(LOG_OUT_SUCCESS)
+
+export const logOutUserAction = (data) => (dispatch) => {
+    logger('logOutUserAction')
+    dispatch(logOutSuccess())
 }

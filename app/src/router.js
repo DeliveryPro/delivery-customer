@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react'
+import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 
 import MainScreen from './pages/Main'
@@ -10,8 +10,6 @@ import ConfirmPasswordScreen from './pages/ConfirmPassword'
 import MapScreen from './pages/Map'
 import QRCodeScannerScreen from './pages/QRCodeScanner'
 import NewPackageScreen from './pages/AddNewDelivery'
-
-// import AuthContext from './AuthContext'
 
 import {
     MAIN,
@@ -62,7 +60,8 @@ const UnAuthRoutes = () => (
 )
 
 const Router = () => {
-    const isAuth  = useSelector(isUserAuthSelector)
+    const isAuth = useSelector(isUserAuthSelector)
+
     return isAuth ? <AuthRoutes /> : <UnAuthRoutes />
 }
 

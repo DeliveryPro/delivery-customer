@@ -14,6 +14,7 @@ import Button from '../components/Button'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserDataSelector, getUserIdSelector } from '../redux/selectors/user-selector'
 import { getUserDataAction } from '../redux/actions/user-action'
+import { logOutUserAction } from '../redux/actions/auth-action'
 
 const useStyles = StyleSheet.create((theme) => ({
     root: {
@@ -160,6 +161,8 @@ const Profile = ({ route }) => {
         setData(d)
     }
 
+    const logOut = () => dispatch(logOutUserAction())
+
     return (
         <View style={classes.root}>
             <ModalContent
@@ -169,16 +172,15 @@ const Profile = ({ route }) => {
             />
             <TouchableHighlight onPress={modalCallAvatar}>
                 <View style={classes.avatarContainer}>
-                    {data[PROFILE_FIELDS.IMAGE.name]?.path ? (
+                    {data[PROFILE_FIELDS.IMAGE.name] ? (
                         <Image
                             style={classes.logo}
                             source={{
-                                uri: `${data[PROFILE_FIELDS.IMAGE.name]}`,
-                                //  data[PROFILE_FIELDS.IMAGE.name]?.data
-                                //     ? `data:${data[PROFILE_FIELDS.IMAGE.name].mime};base64,${
-                                //           data[PROFILE_FIELDS.IMAGE.name].data
-                                //       }`
-                                //     : data[PROFILE_FIELDS.IMAGE.name],
+                                uri: data[PROFILE_FIELDS.IMAGE.name]?.data
+                                    ? `data:${data[PROFILE_FIELDS.IMAGE.name].mime};base64,${
+                                          data[PROFILE_FIELDS.IMAGE.name].data
+                                      }`
+                                    : data[PROFILE_FIELDS.IMAGE.name],
                             }}
                         />
                     ) : (
@@ -233,6 +235,10 @@ const Profile = ({ route }) => {
 
             <Text>total send</Text>
             <Text>total received</Text>
+
+            <View style={classes.buttonContainer}>
+                <Button onPress={logOut} text="Log out" />
+            </View>
         </View>
     )
 }
