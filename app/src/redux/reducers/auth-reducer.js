@@ -1,6 +1,6 @@
 import { handleActions } from 'redux-actions'
 
-import { loginSuccess, registerUserSuccess, logOutSuccess } from '../actions/auth-action'
+import { loginSuccess, registerUserSuccess, logOutSuccess, checkUserAuthSuccess } from '../actions/auth-action'
 
 const defaultState = {
     isAuth: false,
@@ -19,6 +19,10 @@ const authReducer = handleActions(
         }),
         [logOutSuccess]: () => ({
             ...defaultState,
+        }),
+        [checkUserAuthSuccess]: (_, { payload }) => ({
+            isAuth: true,
+            uid: payload,
         }),
     },
     defaultState,

@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
+import { checkUserAuthAction } from './redux/actions/auth-action'
 
 import MainScreen from './pages/Main'
 import ProfileScreen from './pages/Profile'
@@ -25,7 +26,7 @@ import {
 } from './constants/pages'
 
 import Header from './components/Header'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { isUserAuthSelector } from './redux/selectors/auth-selector'
 
 const Stack = createStackNavigator()
@@ -61,6 +62,11 @@ const UnAuthRoutes = () => (
 
 const Router = () => {
     const isAuth = useSelector(isUserAuthSelector)
+
+    const dispatch = useDispatch()
+    useEffect(() => {
+        dispatch(checkUserAuthAction())
+    }, [])
 
     return isAuth ? <AuthRoutes /> : <UnAuthRoutes />
 }
