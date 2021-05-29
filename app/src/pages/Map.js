@@ -73,14 +73,14 @@ const Map = (props) => {
                               </Marker>
                           ))
                         : null}
-
+{/* 
                     <MapViewDirections
                         origin={origin}
                         strokeWidth={3}
                         strokeColor={PRIMARY_COLOR}
                         destination={destination}
                         apikey={GOOGLE_MAPS_APIKEY}
-                    />
+                    /> */}
                 </MapView>
             </View>
 

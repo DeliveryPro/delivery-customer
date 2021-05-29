@@ -1,49 +1,66 @@
-import React, { useState } from 'react'
-import { StyleSheet, Text, View, PermissionsAndroid, Platform, ToastAndroid } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { StyleSheet, Text, View, ToastAndroid } from 'react-native'
 import Input from '../components/Input'
 import { UNDERLAY_COLOR } from '../constants/colors'
-import Geolocation from 'react-native-geolocation-service'
 import Button from '../components/Button'
 import { useDispatch, useSelector } from 'react-redux'
 import { getDeliveryCreationStateSelector } from '../redux/selectors/delivery-selector'
-import { createNewDeliveryAction } from '../redux/actions/delivery-action'
+import { clearNewDeliveryAction, createNewDeliveryAction } from '../redux/actions/delivery-action'
 import { getUserIdSelector } from '../redux/selectors/user-selector'
+import AddressField from '../components/AddressField'
+import { SCREEN_WIDTH } from '../constants/screen'
+import { MAIN } from '../constants/pages'
 
 const useStyles = StyleSheet.create((theme) => ({
     root: {
         display: 'flex',
-    },
-    titleContainer: {
-        display: 'flex',
-        alignItems: 'center',
-        padding: 10,
-        borderWidth: 1,
-        borderLeftWidth: 0,
-        borderRightWidth: 0,
-        borderTopWidth: 0,
-    },
-    titleText: {
-        fontSize: 30,
+        flex: 1,
+        justifyContent: 'space-between',
+        backgroundColor: UNDERLAY_COLOR,
     },
     deliveryInfoContainer: {
         display: 'flex',
-        backgroundColor: UNDERLAY_COLOR,
+        paddingTop: 130,
+        justifyContent: 'flex-start',
     },
     buttonContainer: {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        marginBottom: 30,
+    },
+    addressInputContainer: {
+        display: 'flex',
+        position: 'absolute',
+        width: SCREEN_WIDTH - 20,
+        top: 0,
+        justifyContent: 'center',
+        margin: 10,
+        marginVertical: 20,
+        zIndex: 10,
+    },
+    secondAddressInputContainer: {
+        top: 70,
+        zIndex: 2,
+    },
+
+    loading: {
+        margin: 10,
     },
 }))
 
 const DELIVERY_FIELDS = {
-    ADDRESS: {
-        name: 'address',
-        placeholder: 'Address',
+    ADDRESS_FORM: {
+        name: 'address_from',
+        placeholder: 'From',
+    },
+    ADDRESS_TO: {
+        name: 'address_to',
+        placeholder: 'To',
     },
     RECEIVER: {
         name: 'receiver',
-        placeholder: 'Receiver',
+        placeholder: 'Receiver ID',
     },
     DESCRIPTION: {
         name: 'description',
@@ -51,7 +68,7 @@ const DELIVERY_FIELDS = {
     },
 }
 
-const AddNewDelivery = ({ navigation, route }) => {
+const AddNewDelivery = ({ navigation }) => {
     const [data, setData] = useState({})
     const classes = useStyles()
 
@@ -62,58 +79,37 @@ const AddNewDelivery = ({ navigation, route }) => {
     }
 
     const uid = useSelector(getUserIdSelector)
-    const deliveryState = useSelector(getDeliveryCreationStateSelector)
+    const { isLoading, success } = useSelector(getDeliveryCreationStateSelector)
 
     const dispatch = useDispatch()
 
-    const getUserLocation = () =>
-        Geolocation.getCurrentPosition(
-            (position) => {
-                console.log(position)
-                return position
-            },
-            (error) => {
-                // See error code charts below.
-                console.log(error.code, error.message)
-            },
-            { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
-        )
+    const to = (page) => navigation.navigate(page)
 
-    const isUserHasLocationPermission = async () => {
-        if (Platform.OS === 'android' && Platform.Version < 23) return true
-
-        const hasPermission = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
-
-        if (hasPermission) return true
-
-        const status = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
-
-        if (status === PermissionsAndroid.RESULTS.GRANTED) return true
-
-        if (status === PermissionsAndroid.RESULTS.DENIED) {
-            ToastAndroid.show('Location permission denied by user.', ToastAndroid.LONG)
-        } else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
-            ToastAndroid.show('Location permission revoked by user.', ToastAndroid.LONG)
+    useEffect(() => {
+        if (success) {
+            dispatch(clearNewDeliveryAction())
+            to(MAIN)
         }
-        return false
-    }
+        return () => dispatch(clearNewDeliveryAction())
+    }, [success])
 
-    const onSubmit = async () => {
-        const position = isUserHasLocationPermission() && await getUserLocation()
-        dispatch(createNewDeliveryAction(uid, { ...data, position }))
-    }
+    const onSubmit = async () => dispatch(createNewDeliveryAction(uid, data))
 
     return (
         <View style={classes.root}>
-            <View style={classes.titleContainer}>
-                <Text style={classes.titleText}>Add new delivery</Text>
+            <View style={classes.addressInputContainer}>
+                <AddressField
+                    placeholder={DELIVERY_FIELDS.ADDRESS_FORM.placeholder}
+                    onChange={onChange(DELIVERY_FIELDS.ADDRESS_FORM.name)}
+                />
+            </View>
+            <View style={[classes.addressInputContainer, classes.secondAddressInputContainer]}>
+                <AddressField
+                    placeholder={DELIVERY_FIELDS.ADDRESS_TO.placeholder}
+                    onChange={onChange(DELIVERY_FIELDS.ADDRESS_TO.name)}
+                />
             </View>
             <View style={classes.deliveryInfoContainer}>
-                <Input
-                    placeholder={DELIVERY_FIELDS.ADDRESS.placeholder}
-                    value={data[DELIVERY_FIELDS.ADDRESS.name]}
-                    onChange={onChange(DELIVERY_FIELDS.ADDRESS.name)}
-                />
                 <Input
                     placeholder={DELIVERY_FIELDS.RECEIVER.placeholder}
                     value={data[DELIVERY_FIELDS.RECEIVER.name]}
@@ -124,9 +120,15 @@ const AddNewDelivery = ({ navigation, route }) => {
                     value={data[DELIVERY_FIELDS.DESCRIPTION.name]}
                     onChange={onChange(DELIVERY_FIELDS.DESCRIPTION.name)}
                 />
+                {isLoading && (
+                    <View style={classes.loading}>
+                        <Text>Loading...</Text>
+                    </View>
+                )}
             </View>
+
             <View style={classes.buttonContainer}>
-                <Button onPress={onSubmit}>Submit</Button>
+                <Button onPress={isLoading ? null : onSubmit}>Submit</Button>
             </View>
         </View>
     )

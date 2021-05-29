@@ -251,7 +251,7 @@ const Profile = ({ route }) => {
 
             <Text>total send</Text>
             <Text>total received</Text>
-
+                
             <View style={classes.buttonContainer}>
                 <Button onPress={logOut} text="Log out" />
             </View>

@@ -8,6 +8,7 @@ import {
     SUBSCRIBE_TO_DELIVERY_CHANGES_SUCCESS,
     SUBSCRIBE_TO_DELIVERY_CHANGES_START,
     PACKAGE_UPDATE_SUCCESS,
+    CLEAR_NEW_DELIVERY_SUCCESS,
 } from '../types'
 
 import { errorHandler } from './error-action'
@@ -21,6 +22,7 @@ const CREATE_NEW_DELIVERY_PAGE = 'CREATE_NEW_DELIVERY_PAGE'
 
 export const createNewDeliveryAction = (uid, data) => async (dispatch) => {
     logger('createNewDeliveryAction')
+    dispatch(createNewDeliveryStart())
     try {
         const res = await Delivery.createNew(uid, data)
         if (res) {
@@ -28,8 +30,15 @@ export const createNewDeliveryAction = (uid, data) => async (dispatch) => {
         }
     } catch (e) {
         logger('createNewDeliveryAction', e)
-        // dispatch(errorHandler(CREATE_NEW_DELIVERY_PAGE, e))
+        dispatch(errorHandler(CREATE_NEW_DELIVERY_PAGE, e))
     }
+}
+
+export const clearNewDeliverySuccess = createAction(CLEAR_NEW_DELIVERY_SUCCESS)
+
+export const clearNewDeliveryAction = () => (dispatch) => {
+    logger('clearNewDeliveryAction')
+    dispatch(clearNewDeliverySuccess())
 }
 
 export const subscribeToDeliveryChangeSuccess = createAction(SUBSCRIBE_TO_DELIVERY_CHANGES_SUCCESS)
@@ -41,14 +50,26 @@ const SUBSCRIBE_TO_USER_PACKAGES = 'SUBSCRIBE_TO_USER_PACKAGES'
 
 export const subscribeToDeliveryChangeAction = (uid) => (dispatch) => {
     logger('subscribeToDeliveryChangeAction', uid)
-    // dispatch(subscribeToDeliveryChangeStart())
+    dispatch(subscribeToDeliveryChangeStart())
     try {
         const onChangedItem = (data) => dispatch(packageUpdatedSuccess(data))
         Delivery.subscribeOnChange(uid, onChangedItem)
         dispatch(subscribeToDeliveryChangeSuccess())
     } catch (e) {
         logger('subscribeToDeliveryChangeAction', e)
-        // dispatch(errorHandler(SUBSCRIBE_TO_USER_PACKAGES, e))
+        dispatch(errorHandler(SUBSCRIBE_TO_USER_PACKAGES, e))
+    }
+}
+
+export const subscribeToDeliveryCreateAction = uid => dispatch => {
+    logger('subscribeToDeliveryCreateAction', uid)
+    try {
+        const onAddItem = (data) => dispatch(packageUpdatedSuccess(data))
+        Delivery.subscribeOnAdd(uid, onAddItem)
+        dispatch(subscribeToDeliveryChangeSuccess())
+    } catch (e) {
+        logger('subscribeToDeliveryChangeAction', e)
+        dispatch(errorHandler(SUBSCRIBE_TO_USER_PACKAGES, e))
     }
 }
 
@@ -60,9 +81,10 @@ export const getListOfUserDeliveryAction = (uid) => async (dispatch) => {
     try {
         const res = await Delivery.getList(uid)
         if (!res) return
-        
+
         dispatch(getListOfUserDeliverySuccess(res))
         dispatch(subscribeToDeliveryChangeAction(uid))
+        dispatch(subscribeToDeliveryCreateAction(uid))
     } catch (e) {
         logger('getListOfUserDeliveryAction', e)
         // dispatch(errorHandler(CREATE_NEW_DELIVERY, e))

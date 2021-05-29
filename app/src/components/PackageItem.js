@@ -8,7 +8,7 @@ import Minus from '../assets/minus.svg'
 const useStyles = StyleSheet.create((theme) => ({
     root: {
         display: 'flex',
-        height: 80,
+        height: 90,
         margin: 5,
         marginBottom: 0,
         padding: 10,
@@ -21,6 +21,7 @@ const useStyles = StyleSheet.create((theme) => ({
     pathContainer: {
         display: 'flex',
         flexDirection: 'row',
+        flexWrap: 'wrap',
         paddingBottom: 0,
         paddingRight: 20,
     },
@@ -31,8 +32,8 @@ const useStyles = StyleSheet.create((theme) => ({
         fontSize: 18,
         fontWeight: 'bold',
     },
-    idContainer:{
-        paddingLeft:0,
+    idContainer: {
+        paddingLeft: 0,
     },
     item: {
         display: 'flex',
@@ -50,7 +51,19 @@ const useStyles = StyleSheet.create((theme) => ({
     },
 }))
 
-const PackageItem = ({ item: { id, status, from, to, description } }) => {
+const PackageItem = ({
+    item: {
+        id,
+        status = 'in progress',
+        address_from: {
+            details: { vicinity: from },
+        },
+        address_to: {
+            details: { vicinity: to },
+        },
+        description,
+    },
+}) => {
     const classes = useStyles()
     if (status === 'delivered') {
         classes.root = { ...classes.root, ...classes.inactive }
@@ -62,7 +75,7 @@ const PackageItem = ({ item: { id, status, from, to, description } }) => {
     return (
         <View style={classes.root}>
             <View style={classes.item}>
-                <View style={{...classes.item, ...classes.idContainer}}>
+                <View style={{ ...classes.item, ...classes.idContainer }}>
                     <Package stroke={PRIMARY_COLOR} width={20} />
                     <Text style={{ ...classes.id, ...classes.text }}>{id}</Text>
                 </View>

@@ -4,6 +4,7 @@ import {
     getListOfUserDeliverySuccess,
     getListOfUserDeliveryStart,
     packageUpdatedSuccess,
+    clearNewDeliverySuccess,
 } from '../actions/delivery-action'
 
 import { handleActions } from 'redux-actions'
@@ -37,6 +38,10 @@ const errorReducer = handleActions(
                 isLoading: false,
                 success: true,
             },
+        }),
+        [clearNewDeliverySuccess]: (state) => ({
+            ...state,
+            deliveryCreation: defaultState.deliveryCreation,
         }),
         [getListOfUserDeliverySuccess]: (state, { payload }) => ({
             ...state,

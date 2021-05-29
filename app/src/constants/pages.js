@@ -11,7 +11,7 @@ export const QR_CODE_SCANNER = 'QRCodeScanner'
 export const MAP = 'Map'
 //header
 export const PROFILE = 'Profile'
-export const NEW_PACKAGE = 'NewPackage'
+export const NEW_PACKAGE = 'Add new Delivery'
 
 //additional pages
 export const DELIVERY_INFO ='DeliveryInfo'
