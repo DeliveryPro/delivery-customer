@@ -58,9 +58,9 @@ const DELIVERY_FIELDS = {
         name: 'address_to',
         placeholder: 'To',
     },
-    RECEIVER: {
-        name: 'receiver',
-        placeholder: 'Receiver ID',
+    RECEIVER_EMAIL: {
+        name: 'receiver_email',
+        placeholder: 'Receiver Email',
     },
     DESCRIPTION: {
         name: 'description',
@@ -93,7 +93,7 @@ const AddNewDelivery = ({ navigation }) => {
         return () => dispatch(clearNewDeliveryAction())
     }, [success])
 
-    const onSubmit = async () => dispatch(createNewDeliveryAction(uid, data))
+    const onSubmit = async () => dispatch(createNewDeliveryAction(uid, { sender_uid: uid, ...data}))
 
     return (
         <View style={classes.root}>
@@ -111,9 +111,9 @@ const AddNewDelivery = ({ navigation }) => {
             </View>
             <View style={classes.deliveryInfoContainer}>
                 <Input
-                    placeholder={DELIVERY_FIELDS.RECEIVER.placeholder}
-                    value={data[DELIVERY_FIELDS.RECEIVER.name]}
-                    onChange={onChange(DELIVERY_FIELDS.RECEIVER.name)}
+                    placeholder={DELIVERY_FIELDS.RECEIVER_EMAIL.placeholder}
+                    value={data[DELIVERY_FIELDS.RECEIVER_EMAIL.name]}
+                    onChange={onChange(DELIVERY_FIELDS.RECEIVER_EMAIL.name)}
                 />
                 <Input
                     placeholder={DELIVERY_FIELDS.DESCRIPTION.placeholder}
