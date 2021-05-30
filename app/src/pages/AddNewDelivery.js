@@ -93,7 +93,7 @@ const AddNewDelivery = ({ navigation }) => {
         return () => dispatch(clearNewDeliveryAction())
     }, [success])
 
-    const onSubmit = async () => dispatch(createNewDeliveryAction(uid, { sender_uid: uid, ...data}))
+    const onSubmit = async () => dispatch(createNewDeliveryAction({ sender_uid: uid, ...data }))
 
     return (
         <View style={classes.root}>
