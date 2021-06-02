@@ -11,73 +11,52 @@ import { getPackagesStateSelector } from '../redux/selectors/delivery-selector'
 import { getUserIdSelector } from '../redux/selectors/user-selector'
 
 const useStyles = StyleSheet.create((theme) => ({
-    root: {
-        display: 'flex',
-        flexGrow: 1,
-        position: 'relative',
-    },
-    container: {
-        display: 'flex',
-        flex: 1,
-        paddingBottom: 80,
-    },
+	root: {
+		display: 'flex',
+		flexGrow: 1,
+		position: 'relative',
+	},
+	container: {
+		display: 'flex',
+		flex: 1,
+		paddingBottom: 80,
+	},
 }))
 
-const packages = [
-    {
-        id: '123132',
-        status: 'in progress',
-        from: 'City 1',
-        to: 'City 2',
-        description: 'Test package Test package Test package Test package Test package',
-    },
-    { id: '123133', status: 'in progress', from: 'City 1', to: 'City 2', description: 'Test package' },
-    { id: '123134', status: 'in progress', from: 'City 1', to: 'City 2', description: 'Test package' },
-    { id: '123135', status: 'in progress', from: 'City 1', to: 'City 2', description: 'Test package' },
-    { id: '123136', status: 'in progress', from: 'City 1', to: 'City 2', description: 'Test package' },
-    { id: '123137', status: 'delivered', from: 'City 1', to: 'City 2', description: 'Test package' },
-    { id: '123138', status: 'delivered', from: 'City 1', to: 'City 2', description: 'Test package' },
-    { id: '123139', status: 'delivered', from: 'City 1', to: 'City 2', description: 'Test package' },
-    { id: '123141', status: 'delivered', from: 'City 1', to: 'City 2', description: 'Test package' },
-    { id: '123142', status: 'delivered', from: 'City 1', to: 'City 2', description: 'Test package' },
-]
-
-// const packages = []
-
 const Home = (props) => {
-    const classes = useStyles()
-    const loading = false
+	const classes = useStyles()
+	const loading = false
 
-    const dispatch = useDispatch()
-    const uid = useSelector(getUserIdSelector)
-    const { data, isLoading, success, queried } = useSelector(getPackagesStateSelector)
+	const dispatch = useDispatch()
+	const uid = useSelector(getUserIdSelector)
+	const { data, isLoading, success, queried } = useSelector(getPackagesStateSelector)
 
-    console.log(`values`, Object.values(data))
-    console.log(`keys`, Object.keys(data))
+	// console.log(`values`, Object.values(data))
+	// console.log(`keys`, Object.keys(data))
 
-    useEffect(() => {
-        if (!queried && !isLoading && uid) {
-            dispatch(getListOfUserDeliveryAction(uid))
-        }
-    }, [uid])
+	useEffect(() => {
+		if (!queried && !isLoading && uid) {
+			dispatch(getListOfUserDeliveryAction(uid))
+		}
+	}, [uid])
 
-    return (
-        <View style={classes.root}>
-            <SafeAreaView style={classes.container}>
-                {loading && <LoaderContainer />}
-                {packages.length ? (
-                    <FlatList
-                        data={Object.values(data)}
-                        renderItem={(data) => <PackageItem {...data} />}
-                        keyExtractor={(item) => item.id}
-                    />
-                ) : (
-                    <NoPackages />
-                )}
-            </SafeAreaView>
-            <Tabs activeScreen={MAIN} {...props} />
-        </View>
-    )
+	return (
+		<View style={classes.root}>
+			<SafeAreaView style={classes.container}>
+				{loading && <LoaderContainer />}
+				{!!Object.keys(data).length ? (
+					<FlatList
+						data={Object.keys(data)}
+						renderItem={({ item }) => <PackageItem id={item} data={data[item]} {...props} />}
+						keyExtractor={({ item }) => item}
+					/>
+				) : (
+					<NoPackages />
+				)}
+			</SafeAreaView>
+			<Tabs activeScreen={MAIN} {...props} />
+		</View>
+	)
 }
 
 export default Home

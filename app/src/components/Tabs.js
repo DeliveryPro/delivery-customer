@@ -15,7 +15,6 @@ const useStyles = StyleSheet.create((theme) => ({
     root: {
         display: 'flex',
         position: 'absolute',
-        width: '100%',
         zIndex: 10,
         bottom: 0,
         flexDirection: 'row',
@@ -25,7 +24,7 @@ const useStyles = StyleSheet.create((theme) => ({
     itemWrapper: {
         borderColor: '#eee',
         alignItems: 'center',
-        width: SCREEN_WIDTH / 3,
+        width: SCREEN_WIDTH / 2,
         borderWidth: 1,
         borderStyle: 'solid',
         padding: 20,
@@ -47,7 +46,7 @@ const Tabs = ({ activeScreen = MAIN, ...props }) => {
                     name={QR_CODE_SCANNER}
                     icon={<QR stroke={getColor(QR_CODE_SCANNER)} width={ICON_SIDE} height={ICON_SIDE} />}
                 />
-                <TabItem name={MAP} icon={<Map stroke={getColor(MAP)} width={ICON_SIDE} height={ICON_SIDE} />} />
+                {/* <TabItem name={MAP} icon={<Map stroke={getColor(MAP)} width={ICON_SIDE} height={ICON_SIDE} />} /> */}
             </TabContext.Provider>
         </View>
     )
