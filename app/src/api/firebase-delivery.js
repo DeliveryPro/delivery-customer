@@ -29,14 +29,13 @@ class DeliveryApi {
 		database()
 			.ref(`couriers/${courierId}`)
 			.child('coords')
-			.on('value', (data) => cb(data.val()))
+			.on('value', (data) => cb({ ...data.val(), courierId }))
 
 	cancelSubscribeToCourierPosition = (courierId) =>
 		database()
 			.ref(`couriers/${courierId}`)
 			.child('coords')
 			.off('value')
-			.then(() => true)
 }
 
 export default new DeliveryApi()
