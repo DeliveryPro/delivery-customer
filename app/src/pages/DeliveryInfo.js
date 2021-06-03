@@ -1,8 +1,10 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Button from '../components/Button'
+import { MAP } from '../constants/pages'
 import STATUSES from '../constants/statuses'
+import { subscribeToCourierPositionAction } from '../redux/actions/delivery-action'
 import { getPackageDataStateSelector } from '../redux/selectors/delivery-selector'
 
 const useStyles = StyleSheet.create((theme) => ({
@@ -42,11 +44,12 @@ const useStyles = StyleSheet.create((theme) => ({
 	},
 }))
 
-const DeliveryInfo = () => {
+const DeliveryInfo = ({navigation}) => {
 	const { data, isLoading } = useSelector(getPackageDataStateSelector)
 
+	const dispatch = useDispatch()
 	const classes = useStyles()
-	const { id, address_from, address_to, status, receiver, sender } = data || {}
+	const { id, address_from, address_to, status, receiver, sender, courierId } = data || {}
 
 	if (isLoading)
 		return (
@@ -54,6 +57,15 @@ const DeliveryInfo = () => {
 				<Text>...loading</Text>
 			</View>
 		)
+
+    const toPage = (page) => navigation.navigate(page)
+
+
+    const toMap = () => {
+		console.log('courierId => ', courierId)
+        dispatch(subscribeToCourierPositionAction(courierId))
+        toPage(MAP)
+    }
 
 	return (
 		<View style={classes.root}>
@@ -83,7 +95,7 @@ const DeliveryInfo = () => {
 			</View>
 			{status === STATUSES.IN_PROGRESS && (
 				<View style={classes.buttonContainer}>
-					<Button text="View on map" />
+					<Button text="View on map" onPress={toMap}/>
 				</View>
 			)}
 		</View>

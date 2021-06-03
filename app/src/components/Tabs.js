@@ -4,7 +4,6 @@ import { StyleSheet, TouchableHighlight, View } from 'react-native'
 import { SCREEN_WIDTH } from '../constants/screen'
 import { ACTIVE_COLOR, DEFAULT_COLOR, UNDERLAY_COLOR } from '../constants/colors'
 import { MAIN, MAP, QR_CODE_SCANNER } from '../constants/pages'
-
 import QR from '../assets/qr.svg'
 import List from '../assets/list.svg'
 import Map from '../assets/map.svg'

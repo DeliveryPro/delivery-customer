@@ -25,6 +25,18 @@ class DeliveryApi {
 			.child(packageId)
 			.once('value')
 			.then((data) => ({ id: packageId, ...data.val() }))
+	subscribeToCourierPosition = (courierId, cb) =>
+		database()
+			.ref(`couriers/${courierId}`)
+			.child('coords')
+			.on('value', (data) => cb(data.val()))
+
+	cancelSubscribeToCourierPosition = (courierId) =>
+		database()
+			.ref(`couriers/${courierId}`)
+			.child('coords')
+			.off('value')
+			.then(() => true)
 }
 
 export default new DeliveryApi()

@@ -11,6 +11,9 @@ import {
 	CLEAR_NEW_DELIVERY_SUCCESS,
 	GET_DELIVERY_DATA_SUCCESS,
 	GET_DELIVERY_DATA_START,
+	GET_COURIER_POSITION_SUCCESS,
+	GET_COURIER_POSITION_START,
+	UNSUBSCRIBE_FROM_COURIER_POSITION_SUCCESS,
 } from '../types'
 
 import { errorHandler } from './error-action'
@@ -103,6 +106,36 @@ export const getDeliveryDataAction = (id) => async (dispatch) => {
 		if (res) dispatch(getDeliveryDataSuccess(res))
 	} catch (e) {
 		logger('getDeliveryDataAction', e)
+		// dispatch(errorHandler(CREATE_NEW_DELIVERY, e))
+	}
+}
+
+export const getCourierPositionSuccess = createAction(GET_COURIER_POSITION_SUCCESS)
+export const subscribeToCourierPositionStart = createAction(GET_COURIER_POSITION_START)
+
+export const subscribeToCourierPositionAction = (courierId) => (dispatch) => {
+	logger('subscribeToCourierPositionAction')
+	try {
+		const onPositionChange = (data) => dispatch(getCourierPositionSuccess(data))
+
+		Delivery.subscribeToCourierPosition(courierId, onPositionChange)
+	} catch (e) {
+		logger('subscribeToCourierPositionAction', e)
+		// dispatch(errorHandler(CREATE_NEW_DELIVERY, e))
+	}
+}
+
+export const unsubscribeFromCourierPositionSuccess = createAction(UNSUBSCRIBE_FROM_COURIER_POSITION_SUCCESS)
+
+export const unsubscribeFromCourierPositionAction = (courierId) => (dispatch) => {
+	logger('unsubscribeFromCourierPositionAction')
+	try {
+		const res = Delivery.cancelSubscribeToCourierPosition(courierId)
+		if (res) {
+			dispatch(unsubscribeFromCourierPositionSuccess())
+		}
+	} catch (e) {
+		logger('subscribeToCourierPositionAction', e)
 		// dispatch(errorHandler(CREATE_NEW_DELIVERY, e))
 	}
 }

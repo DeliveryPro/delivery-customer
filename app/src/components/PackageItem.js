@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 
 import Package from '../assets/package.svg'
-import { PRIMARY_COLOR, SECONDARY_COLOR, UNDERLAY_COLOR } from '../constants/colors'
+import { PRIMARY_COLOR, UNDERLAY_COLOR } from '../constants/colors'
 import Minus from '../assets/minus.svg'
 import { DELIVERY_INFO } from '../constants/pages'
 import { useDispatch } from 'react-redux'

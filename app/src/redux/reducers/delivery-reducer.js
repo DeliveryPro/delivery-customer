@@ -7,6 +7,9 @@ import {
 	clearNewDeliverySuccess,
 	getDeliveryDataSuccess,
 	getDeliveryDataStart,
+	getCourierPositionSuccess,
+	subscribeToCourierPositionStart,
+	unsubscribeFromCourierPositionSuccess,
 } from '../actions/delivery-action'
 
 import { handleActions } from 'redux-actions'
@@ -25,6 +28,8 @@ const defaultState = {
 	packageData: {
 		data: null,
 		isLoading: false,
+		courier: null,
+		subscribed: false,
 	},
 }
 
@@ -83,6 +88,29 @@ const errorReducer = handleActions(
 			packageData: {
 				data: null,
 				isLoading: true,
+			},
+		}),
+		[getCourierPositionSuccess]: (state, { payload }) => ({
+			...state,
+			packageData: {
+				...state.packageData,
+				courier: payload,
+			},
+		}),
+		[subscribeToCourierPositionStart]: (state) => ({
+			...state,
+			packageData: {
+				...state.packageData,
+				courier: payload,
+				subscribed: true,
+			},
+		}),
+		[unsubscribeFromCourierPositionSuccess]: (state) => ({
+			...state,
+			packageData: {
+				...state.packageData,
+				courier: null,
+				subscribed: false,
 			},
 		}),
 	},
