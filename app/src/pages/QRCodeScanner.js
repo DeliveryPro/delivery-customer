@@ -52,7 +52,6 @@ const QRCodeScanner = (props) => {
 	useEffect(() => {
 		!Object.keys(userData).length && dispatch(getUserDataAction(uid))
 	}, [userData])
-	console.log(`userData`, userData)
 
 	return (
 		<View style={classes.root}>

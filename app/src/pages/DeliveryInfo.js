@@ -6,6 +6,7 @@ import { MAP } from '../constants/pages'
 import STATUSES from '../constants/statuses'
 import { subscribeToCourierPositionAction } from '../redux/actions/delivery-action'
 import { getPackageDataStateSelector } from '../redux/selectors/delivery-selector'
+import QRCode from 'react-native-qrcode-svg'
 
 const useStyles = StyleSheet.create((theme) => ({
 	root: {
@@ -42,9 +43,12 @@ const useStyles = StyleSheet.create((theme) => ({
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
+	qrCodeContainer: {
+		alignSelf: 'center',
+	},
 }))
 
-const DeliveryInfo = ({navigation}) => {
+const DeliveryInfo = ({ navigation }) => {
 	const { data, isLoading } = useSelector(getPackageDataStateSelector)
 
 	const dispatch = useDispatch()
@@ -58,14 +62,12 @@ const DeliveryInfo = ({navigation}) => {
 			</View>
 		)
 
-    const toPage = (page) => navigation.navigate(page)
+	const toPage = (page) => navigation.navigate(page)
 
-
-    const toMap = () => {
-		console.log('courierId => ', courierId)
-        dispatch(subscribeToCourierPositionAction(courierId))
-        toPage(MAP)
-    }
+	const toMap = () => {
+		dispatch(subscribeToCourierPositionAction(courierId))
+		toPage(MAP)
+	}
 
 	return (
 		<View style={classes.root}>
@@ -93,9 +95,12 @@ const DeliveryInfo = ({navigation}) => {
 				<Text style={classes.textTitle}>Sender</Text>
 				<Text style={classes.text}>{sender?.name}</Text>
 			</View>
+			<View style={classes.qrCodeContainer}>
+				{id && <QRCode value={`package: ${id}`} size={200} logoBackgroundColor="transparent" />}
+			</View>
 			{status === STATUSES.IN_PROGRESS && (
 				<View style={classes.buttonContainer}>
-					<Button text="View on map" onPress={toMap}/>
+					<Button text="View on map" onPress={toMap} />
 				</View>
 			)}
 		</View>
