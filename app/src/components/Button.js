@@ -11,7 +11,7 @@ const useStyles = StyleSheet.create((theme) => ({
         display: 'flex',
         height: 40,
         justifyContent: 'center',
-        backgroundColor: 'red',
+        alignItems:'center',
         borderRadius: 4,
     },
     primary: {

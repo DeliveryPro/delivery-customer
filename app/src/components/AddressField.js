@@ -2,6 +2,7 @@ import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
+import {inputStyles} from './Input'
 
 const GOOGLE_PLACES_API_KEY = 'AIzaSyBtWdDsEL8Xwz4SxoiauOsln4tox0QITFE'
 
@@ -15,15 +16,14 @@ const useStyles = StyleSheet.create(() => ({
 navigator.geolocation = require('@react-native-community/geolocation')
 
 const AddressField = ({ placeholder, onChange }) => {
-    const onPress = (data, details) => {
-        console.log('onPrss => ', data, details)
-    }
+    const classes = inputStyles()
 
     return (
         <GooglePlacesAutocomplete
             placeholder={placeholder || 'Address'}
             minLength={2} // minimum length of text to search
             returnKeyType={'search'}
+            styles={classes}
             fetchDetails={true}
             onPress={(data, details = null) => {
                 let coordinates = details.geometry.location
@@ -39,9 +39,9 @@ const AddressField = ({ placeholder, onChange }) => {
             nearbyPlacesAPI="GooglePlacesSearch" // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
             GooglePlacesSearchQuery={{
                 rankby: 'distance',
-                types: 'house',
+                type: 'lodging',
             }}
-            filterReverseGeocodingByTypes={['locality', 'administrative_area_level_1']}
+            filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']}
             debounce={200}
             currentLocation={true}
             currentLocationLabel="Current location"

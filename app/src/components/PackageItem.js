@@ -64,10 +64,10 @@ const PackageItem = ({
 	data: {
 		status = '',
 		address_from: {
-			details: { vicinity: from },
+			details: { formatted_address: from },
 		},
 		address_to: {
-			details: { vicinity: to },
+			details: { formatted_address: to },
 		},
 		description,
 	},
@@ -81,7 +81,7 @@ const PackageItem = ({
 		classes.text = { ...classes.text, ...classes.inactive }
 	}
 
-	const codeSplitter = (text) => (text?.length > 20 ? `${text.substr(0, 17).trim()} ...` : text)
+	const codeSplitter = (text) => (text?.length > 35 ? `${text.substr(0, 35).trim()} ...` : text)
 
 	const toPage = (page) => () => {
 		dispatch(getDeliveryDataAction(id))

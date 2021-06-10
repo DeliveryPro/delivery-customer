@@ -12,6 +12,7 @@ import MapScreen from './pages/Map'
 import QRCodeScannerScreen from './pages/QRCodeScanner'
 import NewPackageScreen from './pages/AddNewDelivery'
 import DeliveryInfoScreen from './pages/DeliveryInfo'
+import SupportScreen from './pages/Support'
 
 import {
     MAIN,
@@ -24,6 +25,7 @@ import {
     DELIVERY_INFO,
     CONFIRM_PASSWORD,
     NEW_PACKAGE,
+    SUPPORT,
 } from './constants/pages'
 
 import Header from './components/Header'
@@ -48,6 +50,7 @@ const AuthRoutes = () => (
         <Stack.Screen name={NEW_PACKAGE} component={NewPackageScreen}/>
         <Stack.Screen name={PROFILE} component={ProfileScreen} />
         <Stack.Screen name={DELIVERY_INFO} component={DeliveryInfoScreen} />
+        <Stack.Screen name={SUPPORT} component={SupportScreen} />
         <Stack.Screen name={QR_CODE_SCANNER} component={QRCodeScannerScreen} options={HeaderShown} />
     </Stack.Navigator>
 )

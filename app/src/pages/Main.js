@@ -15,6 +15,7 @@ const useStyles = StyleSheet.create((theme) => ({
 		display: 'flex',
 		flexGrow: 1,
 		position: 'relative',
+		
 	},
 	container: {
 		display: 'flex',
@@ -48,7 +49,7 @@ const Home = (props) => {
 					<FlatList
 						data={Object.keys(data)}
 						renderItem={({ item }) => <PackageItem id={item} data={data[item]} {...props} />}
-						keyExtractor={({ item }) => item}
+						keyExtractor={(item ) => item}
 					/>
 				) : (
 					<NoPackages />

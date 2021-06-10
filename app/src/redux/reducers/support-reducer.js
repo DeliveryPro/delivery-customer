@@ -1,40 +1,24 @@
 import { handleActions } from 'redux-actions'
 
-import {
-	getSupportMessagesSuccess,
-	getSupportMessagesStart,
-	getOneSupportMessageStart,
-	getOneSupportMessageSuccess,
-} from '../actions/support-action'
+import { createNewMessageToSupportStart, createNewMessageToSupportSuccess } from '../actions/support-action'
 
 const defaultState = {
-	messages: {},
-	loading: false,
-	oneMessageLoading: false,
-	message: {},
+	isLoading: false,
+	success:false,
 }
 
-const notificationReducer = handleActions(
+const supportReducer = handleActions(
 	{
-		[getSupportMessagesSuccess]: (state, { payload }) => ({
-			messages: { ...state.messages, ...payload },
-			loading: false,
+		[createNewMessageToSupportStart]: () => ({
+			isLoading: true,
+			success: false,
 		}),
-		[getSupportMessagesStart]: (state) => ({
-			...state,
-			loading: true,
-		}),
-		[getOneSupportMessageSuccess]: (state, { payload }) => ({
-			...state,
-			message: payload,
-			oneMessageLoading: false,
-		}),
-		[getOneSupportMessageStart]: (state) => ({
-			...state,
-			oneMessageLoading: true,
+		[createNewMessageToSupportSuccess]: () => ({
+			isLoading: false,
+			success: true,
 		}),
 	},
 	defaultState,
 )
 
-export default notificationReducer
+export default supportReducer
